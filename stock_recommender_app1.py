@@ -168,6 +168,95 @@ if st.button("Fetch Data"):
     ax.legend()
     st.pyplot(fig)
 
+    # Mock data for demo purposes
+    y_actual = data['Close'][-len(predicted_prices):] # Replace with the actual true values
+    y_pred = predicted_prices
+
+    # Calculate metrics dynamically
+    mse = np.mean((y_actual - y_pred) ** 2)
+    rmse = np.sqrt(mse)
+    mae = np.mean(np.abs(y_actual - y_pred))
+
+    # Display Metrics
+    st.markdown("""
+        <style>
+        .metrics-container {
+            display: flex;
+            flex-wrap: wrap; /* Ensure responsiveness */
+            justify-content: center; /* Center-align the metric boxes */
+            gap: 20px; /* Add spacing between metric boxes */
+            margin-top: 20px;
+        }
+        .metric-box {
+            text-align: center;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            padding: 15px;
+            width: 200px; /* Fixed width for consistent sizing */
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9; /* Light background for better visuals */
+        }
+        .metric-box h3 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #333;
+        }
+        .metric-box p {
+            margin: 10px 0 0;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #007BFF;
+        }
+        h2 {
+            text-align: center; /* Center-align the title */
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    # Title
+    st.markdown("<h2 style='text-align: center;'>Model Performance Metrics</h2>", unsafe_allow_html=True)
+
+    # Metrics Container
+    st.markdown('<div class="metrics-container">', unsafe_allow_html=True)
+    st.markdown(
+        f"""
+        <div class="metric-box">
+            <h3>Mean Squared Error (MSE)</h3>
+            <p>{mse:.2f}</p>
+        </div>
+        <div class="metric-box">
+            <h3>Root Mean Squared Error (RMSE)</h3>
+            <p>{rmse:.2f}</p>
+        </div>
+        <div class="metric-box">
+            <h3>Mean Absolute Error (MAE)</h3>
+            <p>{mae:.2f}</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+  
+    st.markdown('</div>', unsafe_allow_html=True) 
+
+    # Align the lengths of y_test and predictions
+    y_test = y_test[:len(predictions)].reshape(-1, 1)
+
+    # Calculate residuals
+    residuals = scaler.inverse_transform(y_test.reshape(-1, 1)) - scaler.inverse_transform(predictions)
+
+    # Subheader
+    st.markdown("<h2 style='text-align: center;'>Residual Distribution (Prediction Errors)</h2>", unsafe_allow_html=True)
+
+    # Plot residuals
+    st.markdown('<div class="center-content">', unsafe_allow_html=True)
+    #st.subheader("Residual Distribution (Prediction Errors)")
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.hist(residuals, bins=20, color="gray", edgecolor="black")
+    ax.set_title("Residual Distribution")
+    ax.set_xlabel("Residual Value")
+    ax.set_ylabel("Frequency")
+    st.pyplot(fig)
+
 # Footer
 st.markdown(
   '<footer>© 2024 AI Stock Predictor | Powered by Streamlit</footer>',
