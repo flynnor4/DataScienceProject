@@ -13,8 +13,8 @@ Original file is located at
 # Step 1: Data Collection
 """
 
-#!pip install fredapi
-#!pip install yfinance
+!pip install fredapi
+!pip install yfinance
 
 import yfinance as yf
 from fredapi import Fred
@@ -92,7 +92,7 @@ model.fit(x_train, y_train, epochs=10, batch_size=32)
 
 """
 
-#!pip install streamlit
+!pip install streamlit
 
 import streamlit as st
 import matplotlib.pyplot as plt
